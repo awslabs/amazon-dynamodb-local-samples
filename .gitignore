@@ -1,0 +1,3 @@
+DynamoDBLocal/native-libs/
+DynamoDBLocal/target/
+.idea/
