@@ -80,7 +80,7 @@ If you prefer to use DynamoDB Local as a Maven dependency, follow these steps:
    mvn clean package
    ```
 
-### Optional: Create a a runnable jar: https://www.baeldung.com/executable-jar-with-maven
+### Optional: Create a runnable jar: https://www.baeldung.com/executable-jar-with-maven
 
 ## Resources
 - [DynamoDB Local Documentation](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
