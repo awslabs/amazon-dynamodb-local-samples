@@ -59,7 +59,7 @@ You can find the latest version of DynamoDB Local here: https://mvnrepository.co
    mvn clean package
    ```
 
-### Optional: Create a a runnable jar: https://www.baeldung.com/executable-jar-with-maven
+### Optional: Create a runnable jar: https://www.baeldung.com/executable-jar-with-maven
 
 ## Resources
 - [DynamoDB Local Documentation](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
