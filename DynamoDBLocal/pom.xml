@@ -23,6 +23,7 @@
 
     <dependencies>
         <!--        DynamoDB local v2.0.0 and greater supports the jakarta.* namespace. If you have application requirements that uses the javax.* namespace in your Java classes, use DynamoDB local v1.23 and greater.-->
+        <!--        Find the latest version of DynamoDB Local on Maven Central: https://mvnrepository.com/artifact/com.amazonaws/DynamoDBLocal  -->     
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>DynamoDBLocal</artifactId>
