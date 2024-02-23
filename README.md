@@ -53,6 +53,7 @@ If you prefer to use DynamoDB Local as a Maven dependency, follow these steps:
    </dependency>
    ```
 You can find the latest version of DynamoDB Local here: https://mvnrepository.com/artifact/com.amazonaws/DynamoDBLocal
+
 3. Build your project using Maven:
    ```
    mvn clean package
