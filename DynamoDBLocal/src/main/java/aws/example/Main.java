@@ -152,7 +152,6 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            System.setProperty("sqlite4java.library.path", "DynamoDBLocal/native-libs");
             String port = "8000";
             String uri = "http://localhost:" + port;
             // Create an in-memory and in-process instance of DynamoDB Local that runs over HTTP

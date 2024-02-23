@@ -49,33 +49,11 @@ If you prefer to use DynamoDB Local as a Maven dependency, follow these steps:
    <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>DynamoDBLocal</artifactId>
-         <version>2.0.0</version>
+         <version><LATEST_VERSION></version>
    </dependency>
    ```
-
-3. Add following plugin to import SQLLite Native Libaries into your project folder, please check project module `DynamoDBLocal` for more details
-   ```xml
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>3.6.0</version>
-            <executions>
-                <execution>
-                    <id>copy</id>
-                    <phase>test-compile</phase>
-                    <goals>
-                        <goal>copy-dependencies</goal>
-                    </goals>
-                    <configuration>
-                        <includeScope>test</includeScope>
-                        <includeTypes>so,dll,dylib</includeTypes>
-                        <outputDirectory>${project.basedir}/native-libs</outputDirectory>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-   ```
-4. Build your project using Maven:
+You can find the latest version of DynamoDB Local here: https://mvnrepository.com/artifact/com.amazonaws/DynamoDBLocal
+3. Build your project using Maven:
    ```
    mvn clean package
    ```
@@ -90,6 +68,9 @@ If you prefer to use DynamoDB Local as a Maven dependency, follow these steps:
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## Contact us
+To report a bug or request a feature or to contact the DynamoDB Local team, reach out to us at aws-ddblocal-feedback@amazon.com.
 
 ## License
 
