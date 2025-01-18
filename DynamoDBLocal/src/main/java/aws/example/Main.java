@@ -239,8 +239,9 @@ public class Main {
         assertDoesNotThrow(clientName + "-queryPaginator", () -> ddbClient.queryPaginator(
                 QueryRequest.builder().tableName(notExistentTable).build()));
         /*
-         * The following throws an unexpected com.amazonaws.services.dynamodbv2.exceptions.DynamoDBLocalServiceException
-         * when called on a client created via DynamoDBEmbedded.create().dynamoDbClient().
+         * The following throws a com.amazonaws.services.dynamodbv2.exceptions.DynamoDBLocalServiceException
+         * when called on a client created via DynamoDBEmbedded.create().dynamoDbClient() when it's expected to throw
+         * a software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException.
          */
         assertThrowsResourceNotFoundException(clientName + "-scanPaginatorIterable", () -> ddbClient.scanPaginator(
                 ScanRequest.builder().tableName(notExistentTable).build()).forEach(ScanResponse::items));
