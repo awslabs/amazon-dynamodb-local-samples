@@ -231,59 +231,21 @@ public class Main {
 
     private static void testExceptionHandling(String clientName, DynamoDbClient ddbClient) {
         String notExistentTable = "non-existent-table";
-        assertThrowsResourceNotFoundException(clientName + "-deleteTable", () -> ddbClient.deleteTable(
-                DeleteTableRequest.builder().tableName(notExistentTable).build()));
-        assertThrowsResourceNotFoundException(clientName + "-describeTable", () -> ddbClient.describeTable(
-                DescribeTableRequest.builder().tableName(notExistentTable).build()));
-        assertThrowsResourceNotFoundException(clientName + "-getItem", () -> ddbClient.getItem(
-                GetItemRequest.builder().tableName(notExistentTable).build()));
-        assertThrowsResourceNotFoundException(clientName + "-putItem", () -> ddbClient.putItem(
-                PutItemRequest.builder().tableName(notExistentTable).build()));
-        assertThrowsResourceNotFoundException(clientName + "-updateItem", () -> ddbClient.updateItem(
-                UpdateItemRequest.builder().tableName(notExistentTable)
-                        .build()));
-        assertThrowsResourceNotFoundException(clientName + "-deleteItem", () -> ddbClient.deleteItem(
-                DeleteItemRequest.builder().tableName(notExistentTable)
-                        .build()));
-        assertThrowsResourceNotFoundException(clientName + "-query", () -> ddbClient.query(
-                QueryRequest.builder().tableName(notExistentTable)
-                        .build()));
-        assertThrowsResourceNotFoundException(clientName + "-scan", () -> ddbClient.scan(ScanRequest.builder().tableName(notExistentTable).build()));
-        assertThrowsResourceNotFoundException(clientName + "-batchGetItem", () -> ddbClient.batchGetItem(
-                BatchGetItemRequest.builder()
-                        .requestItems(Map.of(notExistentTable, KeysAndAttributes.builder()
-                                .keys(List.of(Map.of("id", AttributeValue.builder().s("key2").build())))
-                                .build()
-                        ))
-                        .build()
-        ));
-        assertThrowsResourceNotFoundException(clientName + "-batchWriteItem", () -> ddbClient.batchWriteItem(
-                BatchWriteItemRequest.builder()
-                        .requestItems(Map.of(notExistentTable, List.of(
-                                WriteRequest.builder().putRequest(PutRequest.builder().item(Map.of("id", AttributeValue.builder().s("1").build())).build()).build()
-                        )))
-                        .build()));
-        assertThrowsResourceNotFoundException(clientName + "-transactGetItems", () -> ddbClient.transactGetItems(
-                TransactGetItemsRequest.builder()
-                        .transactItems(List.of(TransactGetItem.builder().get(Get.builder().tableName(notExistentTable).key(Map.of("id", AttributeValue.builder().s("1").build())).build()).build()))
-                        .build()));
-        assertThrowsResourceNotFoundException(clientName + "-transactWriteItems", () -> ddbClient.transactWriteItems(
-                TransactWriteItemsRequest.builder().transactItems(
-                        List.of(TransactWriteItem.builder().put(Put.builder().tableName(notExistentTable)
-                                .item(Map.of("id", AttributeValue.builder().s("1").build())).build()).build())
-                ).build()));
+        /*
+         * The following does not throw an exception, which is expected.
+         */
         assertDoesNotThrow(clientName + "-scanPaginator", () -> ddbClient.scanPaginator(
                 ScanRequest.builder().tableName(notExistentTable).build()));
-        assertThrowsResourceNotFoundException(clientName + "-scanPaginatorIterable", () -> ddbClient.scanPaginator(
-                ScanRequest.builder().tableName(notExistentTable).build()).forEach(ScanResponse::items));
         assertDoesNotThrow(clientName + "-queryPaginator", () -> ddbClient.queryPaginator(
                 QueryRequest.builder().tableName(notExistentTable).build()));
+        /*
+         * The following throws an unexpected com.amazonaws.services.dynamodbv2.exceptions.DynamoDBLocalServiceException
+         * when called on a client created via DynamoDBEmbedded.create().dynamoDbClient().
+         */
+        assertThrowsResourceNotFoundException(clientName + "-scanPaginatorIterable", () -> ddbClient.scanPaginator(
+                ScanRequest.builder().tableName(notExistentTable).build()).forEach(ScanResponse::items));
         assertThrowsResourceNotFoundException(clientName + "-queryPaginatorIterable", () -> ddbClient.queryPaginator(
                 QueryRequest.builder().tableName(notExistentTable).build()).forEach(QueryResponse::items));
-        assertThrowsResourceNotFoundException(clientName + "-describeTimeToLive", () -> ddbClient.describeTimeToLive(
-                DescribeTimeToLiveRequest.builder().tableName(notExistentTable).build()));
-        assertThrowsResourceNotFoundException(clientName + "-updateTimeToLive", () -> ddbClient.updateTimeToLive(
-                UpdateTimeToLiveRequest.builder().tableName(notExistentTable).build()));
     }
 
     private static void assertThrowsResourceNotFoundException(String name, Runnable runnable) {
