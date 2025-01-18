@@ -174,21 +174,15 @@ public class Main {
 
             // Create a table in DynamoDB Local with table name Music and partition key Artist
             // Understanding core components of DynamoDB: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html
-//            createTable(ddbClient, tableName, keyName);
+            createTable(ddbClient, tableName, keyName);
 
             //  List all the tables in DynamoDB Local
 
-//            System.out.println("Listing tables in DynamoDB Local...");
-//            System.out.println("-------------------------------");
-//            ListTablesResponse listTablesResponse = ddbClient.listTables();
-//            System.out.println(listTablesResponse.tableNames());
+            System.out.println("Listing tables in DynamoDB Local...");
+            System.out.println("-------------------------------");
+            ListTablesResponse listTablesResponse = ddbClient.listTables();
+            System.out.println(listTablesResponse.tableNames());
 
-            try {
-                ddbClient.query(QueryRequest.builder().tableName(tableName).build());
-            } catch (ResourceNotFoundException e) {
-                System.out.println("expected");
-                System.exit(0);
-            }
 
             String key1 = "No One you know";
             String key2 = "The Beatles";
