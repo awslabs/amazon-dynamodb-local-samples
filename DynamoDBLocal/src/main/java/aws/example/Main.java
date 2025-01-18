@@ -272,11 +272,11 @@ public class Main {
                         List.of(TransactWriteItem.builder().put(Put.builder().tableName(notExistentTable)
                                 .item(Map.of("id", AttributeValue.builder().s("1").build())).build()).build())
                 ).build()));
-        assertThrowsResourceNotFoundException(clientName + "-scanPaginator", () -> ddbClient.scanPaginator(
+        assertDoesNotThrow(clientName + "-scanPaginator", () -> ddbClient.scanPaginator(
                 ScanRequest.builder().tableName(notExistentTable).build()));
         assertThrowsResourceNotFoundException(clientName + "-scanPaginatorIterable", () -> ddbClient.scanPaginator(
                 ScanRequest.builder().tableName(notExistentTable).build()).forEach(ScanResponse::items));
-        assertThrowsResourceNotFoundException(clientName + "-queryPaginator", () -> ddbClient.queryPaginator(
+        assertDoesNotThrow(clientName + "-queryPaginator", () -> ddbClient.queryPaginator(
                 QueryRequest.builder().tableName(notExistentTable).build()));
         assertThrowsResourceNotFoundException(clientName + "-queryPaginatorIterable", () -> ddbClient.queryPaginator(
                 QueryRequest.builder().tableName(notExistentTable).build()).forEach(QueryResponse::items));
@@ -291,7 +291,15 @@ public class Main {
             runnable.run();
             System.out.printf("%-55s: ok, expected does not throw exception\n", name);
         } catch (ResourceNotFoundException e) {
-            System.out.printf("%-55s: ok, expected ResourceNotFoundException\n", name);
+            // expected
+        } catch (Throwable t) {
+            System.out.printf("%-55s: failure, unexpected %s\n", name, t.getClass().getName());
+        }
+    }
+
+    private static void assertDoesNotThrow(String name, Runnable runnable) {
+        try {
+            runnable.run();
         } catch (Throwable t) {
             System.out.printf("%-55s: failure, unexpected %s\n", name, t.getClass().getName());
         }
