@@ -1,5 +1,6 @@
 package aws.example;
 
+import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded;
 import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
 import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -9,12 +10,18 @@ import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
+import software.amazon.awssdk.services.dynamodb.paginators.QueryIterable;
+import software.amazon.awssdk.services.dynamodb.paginators.ScanIterable;
 import software.amazon.awssdk.services.dynamodb.waiters.DynamoDbWaiter;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+
+import static java.lang.String.format;
 
 public class Main {
 
@@ -168,6 +175,10 @@ public class Main {
                     .region(Region.US_WEST_2)
                     .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("dummyKey", "dummySecret")))
                     .build();
+            testExceptionHandling("DynamoDbClient.builder().build()", ddbClient);
+            DynamoDbClient embeddedDdbClient = DynamoDBEmbedded.create().dynamoDbClient();
+            testExceptionHandling("DynamoDBEmbedded.create()", embeddedDdbClient);
+            System.exit(0);
 
             String tableName = "Music";
             String keyName = "Artist";
@@ -182,7 +193,6 @@ public class Main {
             System.out.println("-------------------------------");
             ListTablesResponse listTablesResponse = ddbClient.listTables();
             System.out.println(listTablesResponse.tableNames());
-
 
             String key1 = "No One you know";
             String key2 = "The Beatles";
@@ -214,9 +224,47 @@ public class Main {
             System.out.println("Getting Item for key: " + key1);
             System.out.println("-------------------------------");
             getDynamoDBItem(ddbClient, tableName, keyName, key1);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void testExceptionHandling(String clientName, DynamoDbClient ddbClient) {
+        String notExistentTable = "non-existent-table";
+        /*
+         * The following does not throw an exception, which is expected.
+         */
+        assertDoesNotThrow(clientName + "-scanPaginator", () -> ddbClient.scanPaginator(
+                ScanRequest.builder().tableName(notExistentTable).build()));
+        assertDoesNotThrow(clientName + "-queryPaginator", () -> ddbClient.queryPaginator(
+                QueryRequest.builder().tableName(notExistentTable).build()));
+        /*
+         * The following throws a com.amazonaws.services.dynamodbv2.exceptions.DynamoDBLocalServiceException
+         * when called on a client created via DynamoDBEmbedded.create().dynamoDbClient() when it's expected to throw
+         * a software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException.
+         */
+        assertThrowsResourceNotFoundException(clientName + "-scanPaginatorIterable", () -> ddbClient.scanPaginator(
+                ScanRequest.builder().tableName(notExistentTable).build()).forEach(ScanResponse::items));
+        assertThrowsResourceNotFoundException(clientName + "-queryPaginatorIterable", () -> ddbClient.queryPaginator(
+                QueryRequest.builder().tableName(notExistentTable).build()).forEach(QueryResponse::items));
+    }
+
+    private static void assertThrowsResourceNotFoundException(String name, Runnable runnable) {
+        try {
+            runnable.run();
+            System.out.printf("%-55s: ok, expected does not throw exception\n", name);
+        } catch (ResourceNotFoundException e) {
+            // expected
+        } catch (Throwable t) {
+            System.out.printf("%-55s: failure, unexpected %s\n", name, t.getClass().getName());
+        }
+    }
+
+    private static void assertDoesNotThrow(String name, Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable t) {
+            System.out.printf("%-55s: failure, unexpected %s\n", name, t.getClass().getName());
         }
     }
 }
