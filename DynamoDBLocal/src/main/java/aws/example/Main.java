@@ -1,7 +1,7 @@
 package aws.example;
 
-import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
-import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
+import software.amazon.dynamodb.services.local.main.ServerRunner;
+import software.amazon.dynamodb.services.local.server.DynamoDBProxyServer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.waiters.WaiterResponse;

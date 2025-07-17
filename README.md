@@ -47,12 +47,12 @@ If you prefer to use DynamoDB Local as a Maven dependency, follow these steps:
 2. Add the following dependency to the `<dependencies>` section:
    ```xml
    <dependency>
-        <groupId>com.amazonaws</groupId>
+        <groupId>software.amazon.dynamodb</groupId>
         <artifactId>DynamoDBLocal</artifactId>
          <version><LATEST_VERSION></version>
    </dependency>
    ```
-You can find the latest version of DynamoDB Local here: https://mvnrepository.com/artifact/com.amazonaws/DynamoDBLocal
+You can find the latest version of DynamoDB Local here: https://mvnrepository.com/artifact/software.amazon.dynamodb/DynamoDBLocal
 
 3. Build your project using Maven:
    ```
