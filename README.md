@@ -4,7 +4,7 @@ DynamoDB Local is a downloadable version of DynamoDB that enables you to develop
 This project showcases multiple approaches to set up and use DynamoDB Local, including downloading JAR files, running it as a Docker image, and using it as a Maven dependency.
 
 ## Prerequisites
-- Java Development Kit (JDK) 11 or later installed on your system
+- Java Development Kit (JDK) 17 or later installed on your system
 - Apache Maven installed on your system
 - Docker installed (if running DynamoDB Local as a Docker image)
 
